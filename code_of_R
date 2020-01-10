@@ -1,0 +1,115 @@
+# Data Manipulation with dplyr. dplyr is a package for data manipulation, written and maintained by Hadley Wickham. It provides some great, easy-to-use functions that are very handy when performing exploratory data analysis and manipulation
+
+library(dplyr)
+library()
+
+#read a tsv file
+cdr <- read.table(file = 'CDR.txt.txt', sep = '\t')
+View(cdr)
+
+
+#fetch data of three countries where country code = 33,39,43
+cdr1 <- filter(cdr ,V3 == 33 | V3 == 39 | V3 == 43)
+View(cdr1)
+
+
+
+#calculate How many grids (square_ids) are there in total in the given three countries? 
+dim(cdr1)
+
+
+
+
+
+#Display the number of unique grids in the three countries.
+
+check <- select(cdr1 , V1)
+View (check)
+#below commands also shows a number of unique square_id
+result <- unique(cdr1$V1)
+View (result)
+str (check1)
+
+
+
+
+#	Which country has the minimum total internet activity?
+
+pp <- summarise (group_by(cdr1 ,V3),summ = sum(V8, na.rm=TRUE))
+View(pp)
+pp1 <- summarise(pp ,min(summ))
+View(pp1)
+res <- filter(pp ,summ == pp1)
+View(res)
+
+
+
+
+
+# Which country among the given three has the second highest total activity? Note that total activity is defined as the sum of sms_in, sms_out, call_in, call_out, internet_traffic. 
+
+rr <- summarise (group_by(cdr1 ,V3),sum1 = sum(V4,V5,V6,V7,V8, na.rm=TRUE))
+View(rr)
+#second row has second highest total activity
+newdata <- rr [order(-rr$sum1),]
+View(newdata)
+
+
+
+
+
+# 	Which squareID has the maximum total SMS activity in these three countries? Note that total SMS activity is the sum of incoming and 
+outgoing SMSes.
+qq <- summarise (group_by(cdr1 ,V1),sum2 = sum(V4,V5, na.rm=TRUE))
+View(qq)
+newdata1 <- qq [order(-qq$sum2),]
+#first squareID has the maximum total SMS activity in these three countries
+View(newdata1)
+
+
+
+
+
+
+
+
+#	What is the total activity for the three countries? Note that total activity is defined as the sum of sms_in, sms_out, call_in, call_out, internet_traffic. 
+dd <- summarise (group_by(cdr1 ,V3),sum1 = sum(V4,V5,V6,V7,V8, na.rm=TRUE))
+View(dd)
+
+
+
+
+
+
+#	What is the total call activity from the three square_ids to country_code 39? 
+
+kk <-filter(cdr1,V3==39)
+vv <- head(kk,3)
+View(vv)
+tt <- summarise (group_by(vv, V3), sum3 = sum(V6,V7, na.rm=TRUE))
+View(tt)
+final <- select(tt,sum3)
+final
+
+
+
+
+
+#	What is the total SMS activity from the three square_ids to country_code 39? 
+uu <- summarise (group_by(vv, V3), sum4 = sum(V4,V5, na.rm=TRUE))
+View(uu)
+final1 <- select(uu,sum4)
+final1
+
+
+
+
+
+
+#	What is the total activity, i.e. sum of CallIn, CallOut, SMSIn, SMSOut, internet traffic of the three square_ids to country_code? 
+
+oo <- summarise (group_by(vv, V3), sum4 = sum(V4,V5,V6,V7,V8, na.rm=TRUE))
+View(oo)
+final2 <- select(oo,sum4)
+final2
